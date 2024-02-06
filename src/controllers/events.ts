@@ -64,3 +64,13 @@ export const updateEvent: RequestHandler = async (req, res) => {
 
   res.json({ error: "Ocorreu um erro" });
 };
+
+export const deleteEvent: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+
+  const deleteEvent = await events.remove(Number(id));
+
+  if (deleteEvent) return res.json({ event: deleteEvent });
+
+  res.json({ error: "Ocorreu um erro" });
+};
