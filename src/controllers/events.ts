@@ -8,3 +8,13 @@ export const getAll: RequestHandler = async (req, res) => {
 
   res.json({ error: "Ocorreu um erro" });
 };
+
+export const getEvent: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+
+  const eventItem = await events.getOne(Number(id));
+
+  if (eventItem) return res.json({ event: eventItem });
+
+  res.json({ error: "Ocorreu um erro" });
+};
