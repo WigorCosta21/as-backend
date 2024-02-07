@@ -66,3 +66,16 @@ export const updateGroup: RequestHandler = async (req, res) => {
 
   res.json({ error: "Ocorreu um erro" });
 };
+
+export const deleteGroup: RequestHandler = async (req, res) => {
+  const { id, id_event } = req.params;
+
+  const deleteGroup = await groups.remove({
+    id: Number(id),
+    id_event: Number(id_event),
+  });
+
+  if (deleteGroup) return res.json({ group: deleteGroup });
+
+  res.json({ error: "Ocorreu um erro" });
+};
