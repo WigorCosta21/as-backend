@@ -45,3 +45,24 @@ export const addGroup: RequestHandler = async (req, res) => {
 
   res.json({ erros: "Ocorreu um erro" });
 };
+
+export const updateGroup: RequestHandler = async (req, res) => {
+  const { id, id_event } = req.params;
+
+  const updateGroupSchema = z.object({
+    name: z.string().optional(),
+  });
+
+  const body = updateGroupSchema.safeParse(req.body);
+
+  if (!body.success) return res.json({ error: "Dados inválidos" });
+
+  const updateGroup = await groups.update(
+    { id: Number(id), id_event: Number(id_event) },
+    body.data
+  );
+
+  if (updateGroup) return res.json({ group: updateGroup });
+
+  res.json({ error: "Ocorreu um erro" });
+};
