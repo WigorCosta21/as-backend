@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import * as people from "../services/people";
+import { z } from "zod";
 
 export const getAll: RequestHandler = async (req, res) => {
   const { id_event, id_group } = req.params;
@@ -24,6 +25,29 @@ export const getPerson: RequestHandler = async (req, res) => {
   });
 
   if (personItem) return res.json({ person: personItem });
+
+  res.json({ erros: "Ocorreu um erro" });
+};
+
+export const addPerson: RequestHandler = async (req, res) => {
+  const { id_event, id_group } = req.params;
+
+  const addPersonSchema = z.object({
+    name: z.string(),
+    cpf: z.string().transform((val) => val.replace(/\.|-/gm, "")),
+  });
+  const body = addPersonSchema.safeParse(req.body);
+
+  if (!body.success) return res.json({ error: "Dados inválidos" });
+
+  const newPerson = await people.add({
+    name: body.data.name,
+    cpf: body.data.cpf,
+    id_event: Number(id_event),
+    id_group: Number(id_group),
+  });
+
+  if (newPerson) return res.status(201).json({ person: newPerson });
 
   res.json({ erros: "Ocorreu um erro" });
 };
